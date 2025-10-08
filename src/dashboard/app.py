@@ -4,9 +4,9 @@ import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
 import plotly.express as px
 import pandas as pd
-import dashboard.style as style
-from dashboard.components.ui_helpers import create_tab
-from dashboard.components import overview_tab, player_metrics_tab, team_metrics_tab, feature_analysis_tab, playstyle_clusters_tab, match_prediction_tab, rating_metrics_tab
+import src.dashboard.style as style
+from src.dashboard.components.ui_helpers import create_tab
+from src.dashboard.components import overview_tab, player_metrics_tab, team_metrics_tab, feature_analysis_tab, playstyle_clusters_tab, match_prediction_tab, rating_metrics_tab
 from dash_extensions.enrich import DashProxy, Serverside, Trigger
 from sqlalchemy import create_engine
 import os

@@ -1,7 +1,7 @@
 import dash_bootstrap_components as dbc
 from dash import dcc, html
 import plotly.express as px
-import dashboard.style as style
+import src.dashboard.style as style
 import pandas as pd
 from dash_extensions.enrich import DashProxy, Serverside, Trigger
 from typing import Dict
