@@ -1,0 +1,32 @@
+body {
+    background-color: #221e1e; /* Custom background */
+    color: #333333;            /* Default text color */
+}
+
+.navbar {
+    background-color: #bfa97c !important; /* Override navbar */
+}
+
+.btn-primary {
+    background-color: #0077cc !important;
+    border-color: #005599 !important;
+}
+
+/* Default tab buttons */
+.nav-tabs .nav-link {
+    background-color: #1b1c1e !important;
+    color: #bfa97c !important;
+    border: 2px solid #bfa97c;
+    border-radius: 5px 5px 0 0;
+    margin-right: 5px;
+}
+
+/* Active tab button */
+.nav-tabs .nav-link.active {
+    background-color: #bfa97c !important;
+    color: #1b1c1e !important;
+    border: 2px solid #bfa97c;
+    border-radius: 5px 5px 0 0;
+    margin-right: 5px;
+    font-weight: bold;
+}

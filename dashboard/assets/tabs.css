@@ -1,0 +1,19 @@
+.tab-content > .tab-pane {
+    transition: opacity 0.3s ease-in-out;
+    opacity: 0;
+}
+
+.tab-content > .tab-pane.active {
+    opacity: 1;
+}
+
+.tab-row {
+    transform: translateX(-20px);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.tab-pane.active .tab-row {
+    transform: translateX(0);
+    opacity: 1;
+}
