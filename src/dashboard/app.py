@@ -33,8 +33,7 @@ style.init()
 dashboard_data = preprocessing.get_processed_data(engine)
 
 app = Dash(__name__, url_base_pathname="/analytics/", external_stylesheets=[dbc.themes.BOOTSTRAP], title="Skalagrad Analytics", update_title=None)
-app.title = "Skalagrad Analytics"  # ensure static title
-app.server.secret_key = "some-random-secret-value" #os.getenv("DASH_SECRET_KEY", "super-secret-key")
+app.server.secret_key = os.getenv("DASH_SECRET_KEY")
 
 tabs = [
     create_tab("Overview", "overview", html.Div(id="overview-tab", children=overview_tab.render(dashboard_data["overview_data"]))),
