@@ -80,7 +80,7 @@ app.layout = html.Div([
 ])
 
 if __name__ == "__main__":
-    app.run(debug=True, dev_tools_ui=False, host="localhost", port=8050)
+    app.run(debug=True, dev_tools_ui=False, host="0.0.0.0", port=8050)
 
 """html.Video(
     id="video-bg",
