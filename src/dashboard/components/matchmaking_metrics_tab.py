@@ -2,8 +2,8 @@ import dash_bootstrap_components as dbc
 from dash import dcc, html
 import plotly.express as px
 import src.dashboard.style as style
-import pandas as pd
 from src.dashboard.components.figures.plot_helpers import custom_lowess
+import pandas as pd
 from typing import Dict
 import statsmodels.api as sm
 import plotly.graph_objects as go
@@ -11,7 +11,7 @@ import numpy as np
 
 #render figures
 
-def render_rating_convergence(rating_convergence_data: pd.DataFrame):
+def render_matchmaking_convergence(matchmaking_convergence_data: pd.DataFrame):
     """
     Plots rating_change vs match_number with a LOWESS trendline.
     The first `n_exact` points are matched exactly, the rest is smoothed.
@@ -21,16 +21,16 @@ def render_rating_convergence(rating_convergence_data: pd.DataFrame):
     - n_exact: number of points at the start to match exactly
     """
 
-    x = rating_convergence_data['match_number'].values
-    y = rating_convergence_data['rating_change'].values
+    x = matchmaking_convergence_data['match_number'].values
+    y = matchmaking_convergence_data['team_score_ratio'].values
 
-    trend_x, trend_y = custom_lowess(x, y, n_exact=4)
+    trend_x, trend_y = custom_lowess(x, y, n_exact=0)
 
     # Create scatter plot
     fig = px.scatter(
-        rating_convergence_data,
+        matchmaking_convergence_data,
         x="match_number",
-        y="rating_change",
+        y="team_score_ratio",
         template="skalagrad_theme"
     )
 
@@ -55,8 +55,8 @@ def render_rating_convergence(rating_convergence_data: pd.DataFrame):
 def render(data: Dict[str, pd.DataFrame]):
     content=[
         dbc.Row([
-            dbc.Col(dcc.Graph(id="rating1", figure=render_rating_convergence(data["rating_convergence"])), width=6),
-            dbc.Col(dcc.Graph(id="rating2", figure=render_rating_convergence(data["rating_convergence"])), width=6)
+            dbc.Col(dcc.Graph(id="matchmaking1", figure=render_matchmaking_convergence(data["matchmaking_convergence"])), width=6),
+            dbc.Col(dcc.Graph(id="matchmaking2", figure=render_matchmaking_convergence(data["matchmaking_convergence"])), width=6)
         ], className="tab-row")
     ]
     return html.Div(content)

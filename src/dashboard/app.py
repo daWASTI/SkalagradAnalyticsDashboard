@@ -6,7 +6,7 @@ import plotly.express as px
 import pandas as pd
 import src.dashboard.style as style
 from src.dashboard.components.ui_helpers import create_tab
-from src.dashboard.components import overview_tab, player_metrics_tab, team_metrics_tab, feature_analysis_tab, playstyle_clusters_tab, match_prediction_tab, rating_metrics_tab
+from src.dashboard.components import overview_tab, rating_metrics_tab, matchmaking_metrics_tab, player_metrics_tab, team_metrics_tab, feature_analysis_tab, playstyle_clusters_tab, match_prediction_tab
 from dash_extensions.enrich import DashProxy, Serverside, Trigger
 from sqlalchemy import create_engine
 import os
@@ -14,6 +14,7 @@ from dotenv import load_dotenv
 import logging
 from src.utils.helpers import setup_logging
 from datetime import datetime
+import src.preprocessing.preprocessing as preprocessing
 
 load_dotenv()
 
@@ -29,6 +30,8 @@ setup_logging()
 
 style.init()
 
+dashboard_data = preprocessing.get_processed_data(engine)
+
 VALID_USERNAME_PASSWORD_PAIRS = {
     #os.getenv("DASH_USER"): os.getenv("DASH_PASSWORD")
     'dawasti': '1234'
@@ -40,15 +43,9 @@ app.server.secret_key = "some-random-secret-value" #os.getenv("DASH_SECRET_KEY",
 auth = dash_auth.BasicAuth(app, VALID_USERNAME_PASSWORD_PAIRS)
 
 tabs = [
-    create_tab("Overview", "overview", html.Div(id="overview-tab", children=overview_tab.render(engine))),
-    create_tab("Rating Metrics", "rating_metrics", html.Div(id="rating-metrics-tab", children=rating_metrics_tab.render(engine))),
-    create_tab("Matchmaking Metrics", "matchmaking_metrics", html.Div(id="matchmaking-metrics-tab", children=match_prediction_tab.render(match_prediction_tab.dummy_data))),
-    create_tab("Player Metrics", "player_metrics", html.Div(id="player-metrics-tab", children=overview_tab.render(engine))),
-    create_tab("Team Metrics", "team_metrics", html.Div(id="team-metrics-tab", children=team_metrics_tab.render(team_metrics_tab.dummy_data))),
-    create_tab("Feature Analysis", "feature_analysis", html.Div(id="feature-analysis-tab", children=feature_analysis_tab.render(feature_analysis_tab.dummy_data))),
-    create_tab("Playstyle Clusters", "playstyle_clusters", html.Div(id="playstyle-clusters-tab", children=playstyle_clusters_tab.render(playstyle_clusters_tab.dummy_data))),
-    create_tab("Match Prediction", "match_prediction", html.Div(id="match-prediction-tab", children=match_prediction_tab.render(match_prediction_tab.dummy_data))),
-    create_tab("Live", "live", html.Div(id="live-tab", children=match_prediction_tab.render(match_prediction_tab.dummy_data)))
+    create_tab("Overview", "overview", html.Div(id="overview-tab", children=overview_tab.render(dashboard_data["overview_data"]))),
+    create_tab("Rating Metrics", "rating-metrics", html.Div(id="rating-metrics-tab", children=rating_metrics_tab.render(dashboard_data["rating_metrics_data"]))),
+    create_tab("Matchmaking Metrics", "matchmaking-metrics", html.Div(id="matchmaking-metrics-tab", children=matchmaking_metrics_tab.render(dashboard_data["matchmaking_metrics_data"])))
 ]
 
 app.layout = html.Div([
