@@ -1,4 +1,4 @@
-from dash import dcc, html, ClientsideFunction
+from dash import dcc, html, ClientsideFunction, Dash
 import dash_auth 
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
@@ -32,7 +32,7 @@ style.init()
 
 dashboard_data = preprocessing.get_processed_data(engine)
 
-app = DashProxy(__name__, url_base_pathname="/analytics", external_stylesheets=[dbc.themes.BOOTSTRAP], suppress_callback_exceptions=True, title="Skalagrad Analytics", update_title=None)
+app = Dash(__name__, url_base_pathname="/analytics/", external_stylesheets=[dbc.themes.BOOTSTRAP], title="Skalagrad Analytics", update_title=None)
 app.title = "Skalagrad Analytics"  # ensure static title
 app.server.secret_key = "some-random-secret-value" #os.getenv("DASH_SECRET_KEY", "super-secret-key")
 
