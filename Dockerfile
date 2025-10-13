@@ -4,10 +4,14 @@ FROM python:3.11-slim
 # Set working directory inside the container
 WORKDIR /app
 
-# Copy requirements first to leverage Docker cache
-COPY requirements.txt .
+# Install system dependencies for mysqlclient
+RUN apt-get update && apt-get install -y \
+    default-libmysqlclient-dev \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install dependencies
+# Install python dependencies
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt python-dotenv
 
 # Copy source code and environment file
