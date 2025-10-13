@@ -1,7 +1,7 @@
 import pandas as pd
 
 def get_kda_population():
-
+    
     return
 
 def get_first_kill_rate(): #store rating at the time of each kill event, then aggregate over last X matches

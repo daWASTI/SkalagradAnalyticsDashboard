@@ -32,15 +32,9 @@ style.init()
 
 dashboard_data = preprocessing.get_processed_data(engine)
 
-VALID_USERNAME_PASSWORD_PAIRS = {
-    #os.getenv("DASH_USER"): os.getenv("DASH_PASSWORD")
-    'dawasti': '1234'
-}
-
-app = DashProxy(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], suppress_callback_exceptions=True, title="Skalagrad Analytics", update_title=None)
+app = DashProxy(__name__, url_base_pathname="/analytics", external_stylesheets=[dbc.themes.BOOTSTRAP], suppress_callback_exceptions=True, title="Skalagrad Analytics", update_title=None)
 app.title = "Skalagrad Analytics"  # ensure static title
 app.server.secret_key = "some-random-secret-value" #os.getenv("DASH_SECRET_KEY", "super-secret-key")
-auth = dash_auth.BasicAuth(app, VALID_USERNAME_PASSWORD_PAIRS)
 
 tabs = [
     create_tab("Overview", "overview", html.Div(id="overview-tab", children=overview_tab.render(dashboard_data["overview_data"]))),
@@ -51,7 +45,7 @@ tabs = [
 app.layout = html.Div([
     # Floating video logo
     html.Video(
-        src="/assets/SkalaLogo.mp4",
+        src="/analytics/assets/SkalaLogo.mp4",
         autoPlay=True,
         loop=True,
         muted=True,
@@ -67,7 +61,6 @@ app.layout = html.Div([
 
     # Main container with header and tabs
     dbc.Container([
-        dcc.Store(id="store-data"),
         dcc.Interval(id="interval", interval=10*1000, n_intervals=0),
         dbc.Row([
             dbc.Col(
@@ -84,95 +77,7 @@ app.layout = html.Div([
         html.Div(id="tab-content")
 
     ])
-
 ])
-
-# --- Callback: load per-tab data ---
-@app.callback(
-    Output("store-data", "data"),
-    Input("interval", "n_intervals"),
-    Input("tabs", "active_tab")
-)
-def load_data(_, active_tab):
-    """
-    Loads cached data for the currently active tab.
-    Uses Serverside caching to avoid sending large DataFrames to the browser.
-    """
-    if active_tab == "overview":
-        x = overview_tab.get_cached_data(engine)
-        #print(x)
-        return x
-    elif active_tab == "player_metrics":
-        return player_metrics_tab.get_cached_data(engine)
-    elif active_tab == "team_metrics":
-        return team_metrics_tab.get_cached_data(engine)
-    elif active_tab == "feature_analysis":
-        return feature_analysis_tab.get_cached_data(engine)
-    elif active_tab == "playstyle_clusters":
-        return playstyle_clusters_tab.get_cached_data(engine)
-    elif active_tab == "match_prediction":
-        return match_prediction_tab.get_cached_data(engine)
-    return Serverside(None)
-
-# --- Callbacks: update each tab’s inner div ---
-@app.callback(
-    Output("overview-tab", "children"),
-    Input("store-data", "data")
-)
-def update_overview(data):
-    if data is None:
-        return "Loading..."
-    return overview_tab.render(data)
-
-
-@app.callback(
-    Output("player-metrics-tab", "children"),
-    Input("store-data", "data")
-)
-def update_player_metrics(data):
-    if data is None:
-        return "Loading..."
-    return player_metrics_tab.render(data)
-
-
-@app.callback(
-    Output("team-metrics-tab", "children"),
-    Input("store-data", "data")
-)
-def update_team_metrics(data):
-    if data is None:
-        return "Loading..."
-    return team_metrics_tab.render(data)
-
-
-@app.callback(
-    Output("feature-analysis-tab", "children"),
-    Input("store-data", "data")
-)
-def update_feature_analysis(data):
-    if data is None:
-        return "Loading..."
-    return feature_analysis_tab.render(data)
-
-
-@app.callback(
-    Output("playstyle-clusters-tab", "children"),
-    Input("store-data", "data")
-)
-def update_playstyle_clusters(data):
-    if data is None:
-        return "Loading..."
-    return playstyle_clusters_tab.render(data)
-
-
-@app.callback(
-    Output("match-prediction-tab", "children"),
-    Input("store-data", "data")
-)
-def update_match_prediction(data):
-    if data is None:
-        return "Loading..."
-    return match_prediction_tab.render(data)
 
 if __name__ == "__main__":
     app.run(debug=True, dev_tools_ui=False, host="localhost", port=8050)
