@@ -1,14 +1,7 @@
-# Use a small, official Python image
-FROM python:3.11-slim
+FROM python:3.11-bullseye
 
 # Set working directory inside the container
 WORKDIR /app
-
-# Install system dependencies for mysqlclient
-RUN apt-get update && apt-get install -y \
-    default-libmysqlclient-dev \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
 
 # Install python dependencies
 COPY requirements.txt .
