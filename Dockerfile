@@ -15,8 +15,5 @@ COPY .env .
 ENV PORT=8050
 EXPOSE 8050
 
-# Move to app folder
-WORKDIR /app/src/dashboard
-
 # Run app
-CMD ["python", "app.py"]
+CMD ["python", "src/dashboard/app.py"]
