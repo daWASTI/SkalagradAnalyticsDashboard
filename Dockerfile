@@ -2,6 +2,7 @@ FROM python:3.11-bullseye
 
 # Set working directory inside the container
 WORKDIR /app
+ENV PYTHONPATH=/app
 
 # Install python dependencies
 COPY requirements.txt .
