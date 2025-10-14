@@ -36,8 +36,10 @@ def get_matchmaking_metrics_data(engine):
 
 def get_player_metrics_data(engine):
     try:
+        player_match_data = player_metrics_preprocessing.fetch_player_match_data(engine) #so this huge query doesn't get executed multiple times, will change this for other tabs aswell
         return {
-
+            "player_stats": player_metrics_preprocessing.get_mmr_stat_correlation(player_match_data),
+            "player_stats_2": player_metrics_preprocessing.get_mmr_stat_correlation_2(player_match_data)
         }
     except Exception as e:
         logging.error(f"Failed to load player metrics data: {e}")
@@ -55,7 +57,7 @@ def get_processed_data(engine):
         for key in ["overview_data", "rating_metrics_data", "matchmaking_metrics_data", "player_metrics_data"]:
             if not dashboard_data.get(key):
                 logging.warning(f"{key.replace('_', ' ').title()} is empty.")
-                return dashboard_data
+        return dashboard_data
     except Exception as e:
         logging.error(f"Failed to load dashboard data: {e}")
         return {}

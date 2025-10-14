@@ -38,7 +38,8 @@ app.server.secret_key = os.getenv("DASH_SECRET_KEY")
 tabs = [
     create_tab("Overview", "overview", html.Div(id="overview-tab", children=overview_tab.render(dashboard_data["overview_data"]))),
     create_tab("Rating Metrics", "rating-metrics", html.Div(id="rating-metrics-tab", children=rating_metrics_tab.render(dashboard_data["rating_metrics_data"]))),
-    create_tab("Matchmaking Metrics", "matchmaking-metrics", html.Div(id="matchmaking-metrics-tab", children=matchmaking_metrics_tab.render(dashboard_data["matchmaking_metrics_data"])))
+    create_tab("Matchmaking Metrics", "matchmaking-metrics", html.Div(id="matchmaking-metrics-tab", children=matchmaking_metrics_tab.render(dashboard_data["matchmaking_metrics_data"]))),
+    create_tab("Player Metrics", "player-metrics", html.Div(id="player-metrics-tab", children=player_metrics_tab.render(dashboard_data["player_metrics_data"])))
 ]
 
 app.layout = html.Div([

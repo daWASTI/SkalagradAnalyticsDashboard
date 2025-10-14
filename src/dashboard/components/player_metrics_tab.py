@@ -12,86 +12,56 @@ from src.dashboard.components.figures import plot_helpers
 
 #render figures
 
-def render_daily_matches(daily_matches_data: pd.DataFrame):
+def render_player_stats_mmr_correlation(player_stats: pd.DataFrame):
+    """
+    Create line plots of all stats vs mmr_bin in a single figure.
+    agg_stats should have columns: mmr_bin, score, kills, significant_assists, assists, teamkills
+    """
+    # List of stats to plot
+    stats_cols = ["kills", "significant_assists", "assists", "teamkills"]
+    
+    # Melt the DataFrame so that Plotly can handle multiple lines
+    df_melted = player_stats.melt(id_vars="mmr_bin", value_vars=stats_cols, 
+                               var_name="stat", value_name="value")
+    
+    # Create line plot
     fig = px.line(
-        daily_matches_data, 
-        x="date", 
-        y="match_count",
-        template="skalagrad_theme"
-        )
+        df_melted,
+        x="mmr_bin",
+        y="value",
+        color="stat",
+        markers=True,
+        template="skalagrad_theme",
+        labels={"mmr_bin": "Rating", "value": "Value", "stat": "Stat"}
+    )
+    
+    # Add watermark or any additional styling
     return style.add_watermark(fig)
 
-def render_user_count(user_count_data: pd.DataFrame):
-    user_count_long = user_count_data.melt(
-        id_vars='date', 
-        value_vars=['players_1d', 'players_7d', 'players_30d', 'total_users'],
-        var_name='window',
-        value_name='active_players'
-    )
-
-    # Rename for nicer legend labels
-    user_count_long['window'] = user_count_long['window'].replace({
-        'players_1d': '1-Day Active',
-        'players_7d': '7-Day Active',
-        'players_30d': '30-Day Active'
-    })
-
-    # Plot
+def render_player_stats_mmr_correlation_2(player_stats: pd.DataFrame):
+    """
+    Create line plots of all stats vs mmr_bin in a single figure.
+    agg_stats should have columns: mmr_bin, score, kills, significant_assists, assists, teamkills
+    """
+    # List of stats to plot
+    stats_cols = ["kills", "significant_assists", "assists", "teamkills"]
+    
+    # Melt the DataFrame so that Plotly can handle multiple lines
+    df_melted = player_stats.melt(id_vars="mmr_bin", value_vars=stats_cols, 
+                               var_name="stat", value_name="value")
+    
+    # Create line plot
     fig = px.line(
-        user_count_long,
-        x='date',
-        y='active_players',
-        color='window',
+        df_melted,
+        x="mmr_bin",
+        y="value",
+        color="stat",
+        markers=True,
         template="skalagrad_theme",
-        title='Active Players Over Time'
+        labels={"mmr_bin": "Rating", "value": "Value", "stat": "Stat"}
     )
-    return style.add_watermark(fig)
-
-def render_rating_convergence(rating_convergence_data: pd.DataFrame):
-    """
-    Plots rating_change vs match_number with a LOWESS trendline.
-    """
-
-    # Create scatter plot
-    fig = px.scatter(
-        rating_convergence_data,
-        x="match_number",
-        y="rating_change",
-        template="skalagrad_theme"
-    )
-
-    trend_x, trend_y = plot_helpers.custom_lowess(rating_convergence_data['match_number'].values, rating_convergence_data['rating_change'].values, n_exact=4)
-
-    # Add LOWESS trendline as a separate go.Scatter trace
-    fig.add_trace(
-        go.Scatter(
-            x=trend_x,
-            y=trend_y,
-            mode='lines',
-            line=dict(color='red', width=3),
-            name='LOWESS Trend'
-        )
-    )
-    # Apply watermark
-    fig = style.add_watermark(fig)
-
-    return fig
-
-def render_matchmaking_convergence(matchmaking_convergence_data: pd.DataFrame):
-    fig = px.scatter(
-        matchmaking_convergence_data, 
-        x="match_number", 
-        y="team_score_ratio", 
-        template="skalagrad_theme",
-        trendline="lowess",
-        trendline_options=dict(frac=0.1)
-        )
-    if len(fig.data) > 1:
-        fig.data[1].line.color = "red"   # set trendline color
-        fig.data[1].line.width = 3        # make it thicker
-        fig.data[1].name = "LOWESS Trend"
-
-    fig.add_hline(y=7/13, line_dash="dash", line_color="red", annotation_text="Optimal Match", annotation_position="top left")
+    
+    # Add watermark or any additional styling
     return style.add_watermark(fig)
 
 #assemble tab
@@ -99,8 +69,8 @@ def render_matchmaking_convergence(matchmaking_convergence_data: pd.DataFrame):
 def render(data: Dict[str, pd.DataFrame]):
     content=[
         dbc.Row([
-            dbc.Col(dcc.Graph(id="matchmaking1", figure=render_matchmaking_convergence(data["matchmaking_convergence"])), width=6),
-            dbc.Col(dcc.Graph(id="matchmaking2", figure=render_matchmaking_convergence(data["matchmaking_convergence"])), width=6)
+            dbc.Col(dcc.Graph(id="player1", figure=render_player_stats_mmr_correlation(data["player_stats"])), width=6),
+            dbc.Col(dcc.Graph(id="player2", figure=render_player_stats_mmr_correlation_2(data["player_stats_2"])), width=6)
         ], className="tab-row")
     ]
     return html.Div(content)

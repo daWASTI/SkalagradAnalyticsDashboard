@@ -45,6 +45,14 @@ def render_matchmaking_convergence(matchmaking_convergence_data: pd.DataFrame):
         )
     )
 
+    # Add horizontal line 
+    fig.add_hline(
+        y=7/13,
+        line=dict(color='red', width=2, dash='dash'),
+        annotation_text="Ideal Match",
+        annotation_position="top left"
+    )
+
     # Apply watermark
     fig = style.add_watermark(fig)
 
