@@ -17,7 +17,8 @@ def render_daily_matches(daily_matches_data: pd.DataFrame):
         daily_matches_data, 
         x="date", 
         y="match_count",
-        template="skalagrad_theme"
+        template="skalagrad_theme",
+        title='Matches Per Day'
         )
     return style.add_watermark(fig)
 

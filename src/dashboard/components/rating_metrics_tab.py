@@ -24,7 +24,7 @@ def render_rating_convergence(rating_convergence_data: pd.DataFrame):
     x = rating_convergence_data['match_number'].values
     y = rating_convergence_data['rating_change'].values
 
-    trend_x, trend_y = custom_lowess(x, y, n_exact=4)
+    trend_x, trend_y = custom_lowess(x, y, n_exact=4, frac=0.05)
 
     fig = px.line()
     
@@ -33,7 +33,8 @@ def render_rating_convergence(rating_convergence_data: pd.DataFrame):
         rating_convergence_data,
         x="match_number",
         y="rating_change",
-        template="skalagrad_theme"
+        template="skalagrad_theme",
+        title="Rating convergence"
     )
 
     # Add LOWESS trendline as a separate go.Scatter trace
@@ -65,17 +66,20 @@ def render_rating_convergence_2(rating_convergence_data: pd.DataFrame):
     x = rating_convergence_data['match_number'].values
     y = rating_convergence_data['rating_change'].values
 
-    trend_x, trend_y = custom_lowess(x, y, n_exact=4)
+    trend_x, trend_y = custom_lowess(x, y, n_exact=4, frac=0.05)
 
     fig = px.line(
         x=trend_x,
         y=trend_y,
+        title="Rating convergence trend"
     )
 
     fig.update_layout(
-        xaxis=dict(range=[-100,2600]),
+        xaxis=dict(range=[-100,2500]),
         yaxis=dict(range=[0,30])
     )
+
+    fig.update_traces(line=dict(color='red', width=3))
 
     # Apply watermark
     fig = style.add_watermark(fig)

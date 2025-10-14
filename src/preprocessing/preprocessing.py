@@ -27,7 +27,8 @@ def get_rating_metrics_data(engine):
 def get_matchmaking_metrics_data(engine):
     try:
         return {
-            "matchmaking_convergence": matchmaking_metrics_preprocessing.get_matchmaking_convergence(engine)
+            "matchmaking_quality_convergence": matchmaking_metrics_preprocessing.get_matchmaking_quality_convergence(engine),
+            "matchmaking_quality": matchmaking_metrics_preprocessing.get_matchmaking_quality(engine)
         }
     except Exception as e:
         logging.error(f"Failed to load matchmaking metrics data: {e}")
