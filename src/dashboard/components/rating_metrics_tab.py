@@ -26,6 +26,8 @@ def render_rating_convergence(rating_convergence_data: pd.DataFrame):
 
     trend_x, trend_y = custom_lowess(x, y, n_exact=4)
 
+    fig = px.line()
+    
     # Create scatter plot
     fig = px.scatter(
         rating_convergence_data,
@@ -50,13 +52,43 @@ def render_rating_convergence(rating_convergence_data: pd.DataFrame):
 
     return fig
 
+def render_rating_convergence_2(rating_convergence_data: pd.DataFrame):
+    """
+    Plots rating_change vs match_number with a LOWESS trendline.
+    The first `n_exact` points are matched exactly, the rest is smoothed.
+    
+    Parameters:
+    - rating_convergence_data: DataFrame with 'match_number' and 'rating_change'
+    - n_exact: number of points at the start to match exactly
+    """
+
+    x = rating_convergence_data['match_number'].values
+    y = rating_convergence_data['rating_change'].values
+
+    trend_x, trend_y = custom_lowess(x, y, n_exact=4)
+
+    fig = px.line(
+        x=trend_x,
+        y=trend_y,
+    )
+
+    fig.update_layout(
+        xaxis=dict(range=[-100,2600]),
+        yaxis=dict(range=[0,30])
+    )
+
+    # Apply watermark
+    fig = style.add_watermark(fig)
+
+    return fig
+
 #assemble tab
 
 def render(data: Dict[str, pd.DataFrame]):
     content=[
         dbc.Row([
             dbc.Col(dcc.Graph(id="rating1", figure=render_rating_convergence(data["rating_convergence"])), width=6),
-            dbc.Col(dcc.Graph(id="rating2", figure=render_rating_convergence(data["rating_convergence"])), width=6)
+            dbc.Col(dcc.Graph(id="rating2", figure=render_rating_convergence_2(data["rating_convergence"])), width=6)
         ], className="tab-row")
     ]
     return html.Div(content)
