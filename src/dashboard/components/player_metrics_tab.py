@@ -12,53 +12,89 @@ from src.dashboard.components.figures import plot_helpers
 
 #render figures
 
-def render_player_stats_mmr_correlation(player_stats: pd.DataFrame):
-    """
-    Create line plots of all stats vs mmr_bin in a single figure.
-    agg_stats should have columns: mmr_bin, score, kills, significant_assists, assists, teamkills
-    """
-    # List of stats to plot
-    stats_cols = ["kills", "significant_assists", "assists", "teamkills"]
+def render_score_mmr_correlation(player_stats: pd.DataFrame):
     
-    # Melt the DataFrame so that Plotly can handle multiple lines
-    df_melted = player_stats.melt(id_vars="mmr_bin", value_vars=stats_cols, 
-                               var_name="stat", value_name="value")
-    
+    player_stats = player_stats.rename(columns={"team_score_ratio_group":"Match outcome", "mmr_bin":"rating"})
+
+    player_stats['Match outcome'] = player_stats['Match outcome'].replace({
+        '< 0.8': 'Close',
+        '>= 0.8': 'Decisive'
+    })
+
     # Create line plot
     fig = px.line(
-        df_melted,
-        x="mmr_bin",
-        y="value",
-        color="stat",
-        markers=True,
+        player_stats,
+        x="rating",
+        y="score",
+        color="Match outcome",
         template="skalagrad_theme",
-        labels={"mmr_bin": "Rating", "value": "Value", "stat": "Stat"}
+        title="Average score per round vs rating"
     )
     
     # Add watermark or any additional styling
     return style.add_watermark(fig)
 
-def render_player_stats_mmr_correlation_2(player_stats: pd.DataFrame):
-    """
-    Create line plots of all stats vs mmr_bin in a single figure.
-    agg_stats should have columns: mmr_bin, score, kills, significant_assists, assists, teamkills
-    """
-    # List of stats to plot
-    stats_cols = ["kills", "significant_assists", "assists", "teamkills"]
-    
-    # Melt the DataFrame so that Plotly can handle multiple lines
-    df_melted = player_stats.melt(id_vars="mmr_bin", value_vars=stats_cols, 
-                               var_name="stat", value_name="value")
+def render_kills_mmr_correlation(player_stats: pd.DataFrame):
+
+    player_stats = player_stats.rename(columns={"team_score_ratio_group":"Match outcome", "mmr_bin":"rating"})
+
+    player_stats['Match outcome'] = player_stats['Match outcome'].replace({
+        '< 0.8': 'Close',
+        '>= 0.8': 'Decisive'
+    })
     
     # Create line plot
     fig = px.line(
-        df_melted,
-        x="mmr_bin",
-        y="value",
-        color="stat",
-        markers=True,
+        player_stats,
+        x="rating",
+        y="kills",
+        color="Match outcome",
         template="skalagrad_theme",
-        labels={"mmr_bin": "Rating", "value": "Value", "stat": "Stat"}
+        title="Average kills per round vs rating"
+    )
+    
+    # Add watermark or any additional styling
+    return style.add_watermark(fig)
+
+def render_significant_assists_mmr_correlation(player_stats: pd.DataFrame):
+
+    player_stats = player_stats.rename(columns={"team_score_ratio_group":"Match outcome", "mmr_bin":"rating"})
+
+    player_stats['Match outcome'] = player_stats['Match outcome'].replace({
+        '< 0.8': 'Close',
+        '>= 0.8': 'Decisive'
+    })
+    
+    # Create line plot
+    fig = px.line(
+        player_stats,
+        x="rating",
+        y="significant_assists",
+        color="Match outcome",
+        template="skalagrad_theme",
+        title="Average significant assists per round vs rating"
+    )
+    
+    # Add watermark or any additional styling
+    return style.add_watermark(fig)
+
+def render_assists_mmr_correlation(player_stats: pd.DataFrame):
+
+    player_stats = player_stats.rename(columns={"team_score_ratio_group":"Match outcome", "mmr_bin":"rating"})
+
+    player_stats['Match outcome'] = player_stats['Match outcome'].replace({
+        '< 0.8': 'Close',
+        '>= 0.8': 'Decisive'
+    })
+    
+    # Create line plot
+    fig = px.line(
+        player_stats,
+        x="rating",
+        y="assists",
+        color="Match outcome",
+        template="skalagrad_theme",
+        title="Average assists per round vs rating"
     )
     
     # Add watermark or any additional styling
@@ -69,8 +105,12 @@ def render_player_stats_mmr_correlation_2(player_stats: pd.DataFrame):
 def render(data: Dict[str, pd.DataFrame]):
     content=[
         dbc.Row([
-            dbc.Col(dcc.Graph(id="player1", figure=render_player_stats_mmr_correlation(data["player_stats"])), width=6),
-            dbc.Col(dcc.Graph(id="player2", figure=render_player_stats_mmr_correlation_2(data["player_stats_2"])), width=6)
+            dbc.Col(dcc.Graph(id="player1", figure=render_score_mmr_correlation(data["player_stats"])), width=6),
+            dbc.Col(dcc.Graph(id="player2", figure=render_kills_mmr_correlation(data["player_stats"])), width=6)
+        ], className="tab-row"),
+        dbc.Row([
+            dbc.Col(dcc.Graph(id="player3", figure=render_significant_assists_mmr_correlation(data["player_stats"])), width=6),
+            dbc.Col(dcc.Graph(id="player4", figure=render_assists_mmr_correlation(data["player_stats"])), width=6)
         ], className="tab-row")
     ]
     return html.Div(content)
