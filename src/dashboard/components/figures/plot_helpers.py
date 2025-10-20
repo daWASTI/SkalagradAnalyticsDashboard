@@ -3,8 +3,9 @@ import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
 import plotly.express as px
+from typing import Callable, Any
 
-def custom_lowess(x: pd.Series, y: pd.Series, n_exact=0, frac=0.1):
+def custom_lowess(df: pd.DataFrame, x_column: str, y_column: str, agg_func: Callable[[pd.Series], Any] = pd.Series.mean, n_exact=0, frac=0.1):
     """
     Returns data for a LOWESS trendline, prepending the first n_exact data points and smoothing the rest
     
@@ -13,6 +14,11 @@ def custom_lowess(x: pd.Series, y: pd.Series, n_exact=0, frac=0.1):
     - y: Pandas Series of the data to be plotted on the y-axis
     - n_exact: number of points at the start to match exactly
     """
+
+    df_agg = df.groupby(x_column, as_index=False)[y_column].agg(agg_func).reset_index() #aggregate duplicate values in x, since lowess can't handle that
+
+    x = df_agg[x_column]
+    y = df_agg[y_column]
 
     # Compute LOWESS starting after the first n_exact points
     if len(x) > n_exact:

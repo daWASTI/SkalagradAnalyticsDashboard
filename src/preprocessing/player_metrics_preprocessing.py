@@ -5,6 +5,10 @@ def fetch_player_match_data(engine):
     df = pd.read_sql_query("SELECT * FROM PlayerMatchHistoryCleaned", engine)
     return df
 
+def fetch_kill_data(engine):
+    df = pd.read_sql_query("SELECT * FROM Kills", engine)
+    return df
+
 def get_mmr_stat_correlation(player_match_data: pd.DataFrame, mmr_bin_size = 20, team_score_ratio_cutoff = 0.8):
     #only use columns needed
     cols_needed = ["score", "kills", "significant_assists", "assists", "teamkills", 
@@ -29,6 +33,10 @@ def get_mmr_stat_correlation(player_match_data: pd.DataFrame, mmr_bin_size = 20,
         .rename(columns={"mmr_before": "match_count"})
     )
     return player_stats
+
+def get_mmr_weapon_correlation(kill_data: pd.DataFrame):
+    cols_needed = ["killed_rating", "victim_rating", "is_teamkill", "weapon", "damage_type"]
+    return {}
 
 def get_first_kill_rate(): #store rating at the time of each kill event, then aggregate over last X matches
 

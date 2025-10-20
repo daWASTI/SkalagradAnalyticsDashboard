@@ -21,10 +21,7 @@ def render_rating_convergence(rating_convergence_data: pd.DataFrame):
     - n_exact: number of points at the start to match exactly
     """
 
-    x = rating_convergence_data['match_number'].values
-    y = rating_convergence_data['rating_change'].values
-
-    trend_x, trend_y = custom_lowess(x, y, n_exact=4, frac=0.05)
+    trend_x, trend_y = custom_lowess(rating_convergence_data, "match_number", "rating_change", n_exact=4, frac=0.05)
 
     fig = px.line()
     
@@ -63,10 +60,7 @@ def render_rating_convergence_2(rating_convergence_data: pd.DataFrame):
     - n_exact: number of points at the start to match exactly
     """
 
-    x = rating_convergence_data['match_number'].values
-    y = rating_convergence_data['rating_change'].values
-
-    trend_x, trend_y = custom_lowess(x, y, n_exact=4, frac=0.05)
+    trend_x, trend_y = custom_lowess(rating_convergence_data, "match_number", "rating_change", n_exact=4, frac=0.05)
 
     fig = px.line(
         x=trend_x,

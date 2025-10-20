@@ -26,9 +26,11 @@ def get_rating_metrics_data(engine):
     
 def get_matchmaking_metrics_data(engine):
     try:
+        test = matchmaking_metrics_preprocessing.get_matchmaking_quality_convergence(engine)
+        print(test)
         return {
             "matchmaking_quality_convergence": matchmaking_metrics_preprocessing.get_matchmaking_quality_convergence(engine),
-            "matchmaking_quality": matchmaking_metrics_preprocessing.get_matchmaking_quality(engine)
+            "matchmaking_quality_activity": matchmaking_metrics_preprocessing.get_matchmaking_quality_activity(engine)
         }
     except Exception as e:
         logging.error(f"Failed to load matchmaking metrics data: {e}")
@@ -38,8 +40,10 @@ def get_matchmaking_metrics_data(engine):
 def get_player_metrics_data(engine):
     try:
         player_match_data = player_metrics_preprocessing.fetch_player_match_data(engine) #make sure this huge query doesn't get executed multiple times, will change this for other tabs aswell
+        kill_data = player_metrics_preprocessing.fetch_kill_data(engine)
         return {
-            "player_stats": player_metrics_preprocessing.get_mmr_stat_correlation(player_match_data)
+            "player_stats": player_metrics_preprocessing.get_mmr_stat_correlation(player_match_data),
+            "weapon_stats" : player_metrics_preprocessing.get_mmr_weapon_correlation(kill_data)
         }
     except Exception as e:
         logging.error(f"Failed to load player metrics data: {e}")
