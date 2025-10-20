@@ -1,6 +1,6 @@
 import pandas as pd
 
-def get_rating_population(): #current, max
+def get_rating_population(player_match_data: pd.DataFrame): #all time max aswell as at different selected time stamps
 
     return
 
@@ -21,10 +21,10 @@ def get_rating_convergence(engine):
     rating_convergence = df.groupby("match_number")["rating_change"].mean().reset_index()
     return rating_convergence
 
-def get_rating_performance_correlation(): #just compare rating order vs performance order (score)
+def get_rating_performance_correlation(): #just compare rating order vs performance(score) order in each match
 
     return
 
 def get_rating_resilience(): #need better function name, intended to show how well the rating performs, despite inevitably "bad" matchmaking at lower player counts
-
+    #calculate convergence speed vs average matchmaking quality per player
     return
