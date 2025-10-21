@@ -13,6 +13,8 @@ SKALA_BLUE = "#0d1019"
 SKALA_GREY = "#1b1c1e"
 SKALA_YELLOW = "#bfa97c"
 SKALA_ORANGE = "#ee7600"
+BG_COLOR = "#e6d8bc"
+PLOT_BG_COLOR = "#797a6d"
 
 def add_watermark(fig, logo_path="/assets/SkalaWatermark.png", opacity=0.7, size=0.3):
     fig.add_layout_image(
@@ -40,8 +42,8 @@ skalagrad_theme = dict(
     layout= dict(
         font=dict(family="Arial", size=14, color="#0d1019"),
         title=dict(font=dict(size=20, color="#0d1019")),
-        paper_bgcolor="#e6d8bc",
-        plot_bgcolor="#797a6d",
+        paper_bgcolor= BG_COLOR,
+        plot_bgcolor=PLOT_BG_COLOR,
         xaxis=dict(showgrid=True, gridcolor="#535353", zeroline=False),
         yaxis=dict(showgrid=True, gridcolor="#585858", zeroline=False),
         legend=dict(title_font=dict(size=14), font=dict(size=12))

@@ -9,6 +9,7 @@ import statsmodels.api as sm
 import plotly.graph_objects as go
 import numpy as np
 from src.dashboard.components.figures import plot_helpers
+from src.dashboard.components.ui_helpers import create_row, create_graph
 
 #render figures
 
@@ -51,33 +52,17 @@ def render_user_count(user_count_data: pd.DataFrame):
 #assemble tab
 
 def render(data: Dict[str, pd.DataFrame]):
-    content=[
-        dbc.Row([
-    dbc.Col(
-        dcc.Graph(
-            id="overview1", 
-            figure=render_daily_matches(data["daily_matches"]),
-            style={"height": "100%"}  # make graph take full column height
-        ),
-        width=6,
-        style={"height": "100%", "padding": "1rem"}  # fill the column
-    ),
-    dbc.Col(
-        dcc.Markdown(
-            """
-            # Dashboard Overview
-            ## Key Metrics
-            Here is some explanation text next to the graph.
-            - Point 1
-            - Point 2
-            """
-        ),
-        width=6,
-        style={"padding": "1rem", "backgroundColor": "#f5f5f5"}
-    )
-], style={"height": "500px"})  # set the row height
-
+    fig1 = render_daily_matches(data["daily_matches"])
+    text1 = """
+                            # Dashboard Overview
+                            ## Key Metrics
+                            Here is some explanation text next to the graph.
+                            - Point 1
+                            - Point 2
+                            """
+    fig2 = render_user_count(data["user_count"])
+    content = [
+        create_row(fig1, text1, order=True, marginTop="2rem"),
+        create_row(fig2, text1, order=False, delay="0.5s")
     ]
     return html.Div(content)
-
-#dbc.Col(dcc.Graph(id="overview2", figure=render_user_count(data["user_count"])), width=6)

@@ -1,4 +1,4 @@
-from dash import dcc, html, ClientsideFunction, Dash
+from dash import dcc, html, ClientsideFunction, Dash, callback, MATCH
 import dash_auth 
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
@@ -78,6 +78,20 @@ app.layout = html.Div([
 
     ])
 ])
+
+@callback(
+    Output({"type": "animated-row", "index": MATCH}, "className"),
+    Output({"type": "markdown", "index": MATCH}, "style"),
+    Input({"type": "graph", "index": MATCH}, "figure")
+)
+def animate_row_and_show_text(fig):
+    if fig is None:
+        # still loading
+        return "", {"display": "none"}
+    # graph loaded → animate row and show Markdown
+    return "fly-in-row", {"display": "block"}
+
+
 
 if __name__ == "__main__":
     app.run(debug=True, dev_tools_ui=False, host="0.0.0.0", port=8050)
