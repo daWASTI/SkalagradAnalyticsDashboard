@@ -3,6 +3,8 @@
 Analytics project for exploring player activity, rating behavior, matchmaking quality, and gameplay patterns in **Skalagrad**.  
 [Skalagrad Website](https://skalagrad.com)
 
+Note: Doesn't seem to work on Chrome currently, use Firefox if you can.
+
 ## Overview
 
 Quantifies aspects of the game often discussed qualitatively:
